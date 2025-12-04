@@ -17,7 +17,7 @@ import {
   FaEye
 } from "react-icons/fa";
 
-const API_BASE = "http://localhost:3000/api";
+import api from "../services/api";
 
 const AvisCompagnie = () => {
   const [avis, setAvis] = useState([]);
@@ -34,12 +34,9 @@ const AvisCompagnie = () => {
   const [showDetailModal, setShowDetailModal] = useState(false);
 
   const compagnieId = localStorage.getItem("compagnie_id");
-  const token = localStorage.getItem("token_compagnie");
-
-  const axiosAuth = axios.create({
-    baseURL: API_BASE,
-    headers: { Authorization: `Bearer ${token}` },
-  });
+  
+  // ✅ Utiliser l'instance api configurée qui gère automatiquement les tokens
+  const axiosAuth = api;
 
   useEffect(() => {
     fetchAvis();

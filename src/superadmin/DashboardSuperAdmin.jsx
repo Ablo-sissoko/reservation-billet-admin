@@ -62,93 +62,18 @@ const DashboardSuperAdmin = () => {
         setDashboardData(data.data);
       } else {
         console.warn("⚠️ Échec récupération dashboard:", data.message);
-        // En cas d'erreur, utiliser les données mockées temporairement
-        setDashboardData(generateMockData());
+        setDashboardData(null);
       }
     } catch (error) {
       console.error("❌ Erreur chargement dashboard:", error.response?.data || error);
-      // En cas d'erreur réseau, utiliser les données mockées
-      setDashboardData(generateMockData());
+      setDashboardData(null);
     } finally {
       setLoading(false);
     }
   };
 
-  // Génération de données mock pour la démonstration (fallback)
-  const generateMockData = () => {
-    const compagnies = ["Transport Mali", "Buses Express", "Voyageurs SA", "Trans-Mali", "Bus Plus"];
-    const mois = ["Jan", "Fév", "Mar", "Avr", "Mai", "Jun", "Jul", "Aoû", "Sep", "Oct", "Nov", "Déc"];
-    
-    return {
-      stats: {
-        totalCompagnies: 12,
-        totalUtilisateurs: 1542,
-        totalTrajets: 289,
-        totalReservations: 5432,
-        totalRevenue: 45218000,
-        tauxOccupationMoyen: 68,
-        totalAvis: 234,
-        noteMoyenne: 4.2
-      },
-      variations: {
-        compagnies: { valeur: 2, pourcentage: 20 },
-        utilisateurs: { valeur: 124, pourcentage: 8.7 },
-        trajets: { valeur: 23, pourcentage: 8.6 },
-        reservations: { valeur: 432, pourcentage: 8.6 },
-        revenue: { valeur: 3420000, pourcentage: 8.2 },
-        occupation: { valeur: 3, pourcentage: 4.6 }
-      },
-      graphiques: {
-        revenueMensuel: mois.map(mois => ({
-          mois,
-          revenue: Math.floor(Math.random() * 8000000) + 2000000,
-          transactions: Math.floor(Math.random() * 500) + 200
-        })),
-        occupationHebdomadaire: [
-          { name: "Lun", occupation: 65 },
-          { name: "Mar", occupation: 72 },
-          { name: "Mer", occupation: 68 },
-          { name: "Jeu", occupation: 75 },
-          { name: "Ven", occupation: 80 },
-          { name: "Sam", occupation: 85 },
-          { name: "Dim", occupation: 60 }
-        ],
-        trajetsPopulaires: [
-          { name: "Bamako → Ségou", reservations: 342, revenue: 10260000 },
-          { name: "Bamako → Mopti", reservations: 298, revenue: 11920000 },
-          { name: "Ségou → Sikasso", reservations: 234, revenue: 7020000 },
-          { name: "Kayes → Bamako", reservations: 198, revenue: 7920000 },
-          { name: "Mopti → Tombouctou", reservations: 156, revenue: 6240000 }
-        ],
-        repartitionCompagnies: compagnies.map((compagnie, index) => ({
-          name: compagnie,
-          value: Math.floor(Math.random() * 30) + 15,
-          revenue: Math.floor(Math.random() * 10000000) + 5000000
-        })),
-        evolutionUtilisateurs: mois.map(mois => ({
-          mois,
-          nouveaux: Math.floor(Math.random() * 50) + 20,
-          total: Math.floor(Math.random() * 200) + 1300
-        }))
-      },
-      recent: {
-        reservations: Array.from({ length: 5 }, (_, i) => ({
-          id: i + 1,
-          user: { prenom: ["Moussa", "Aïcha", "Ibrahim", "Fatoumata"][i % 4], nom: ["Diallo", "Traoré", "Keita", "Cissé"][i % 4] },
-          trajet: { ville_depart: "Bamako", ville_arrivee: ["Ségou", "Mopti", "Kayes", "Sikasso"][i % 4] },
-          prix_total: Math.floor(Math.random() * 15000) + 5000,
-          createdAt: new Date(Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000).toISOString()
-        })),
-        compagnies: Array.from({ length: 5 }, (_, i) => ({
-          id: i + 1,
-          nom: compagnies[i],
-          email: `contact@${compagnies[i].toLowerCase().replace(/\s/g, '')}.com`,
-          date_creation: new Date(Date.now() - Math.random() * 365 * 24 * 60 * 60 * 1000).toISOString(),
-          statut: "active"
-        }))
-      }
-    };
-  };
+  // ✅ SUPPRIMÉ : Plus de données mockées en production
+  // Toutes les données doivent venir de l'API backend
 
   // Fonction pour formater les variations
   const formatVariation = (variation, type = "nombre") => {
@@ -281,7 +206,7 @@ const DashboardSuperAdmin = () => {
   const handleExport = async () => {
     setExportLoading(true);
     try {
-      const response = await axiosAuth.get('/dashboard/superadmin/export', {
+      const response = await api.get('/dashboard/superadmin/export', {
         responseType: 'blob'
       });
       

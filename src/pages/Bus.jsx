@@ -3,8 +3,6 @@ import { FaPlus, FaEdit, FaTrash, FaBus, FaUsers, FaShieldAlt, FaSearch, FaEye, 
 import axios from "axios";
 import api from "../services/api";
 
-const API_URL = "http://192.168.243.60:3000/api";
-
 const BusesAdmin = () => {
   const [buses, setBuses] = useState([]);
   const [loading, setLoading] = useState(true);

@@ -20,7 +20,7 @@ import {
   FaClock
 } from "react-icons/fa";
 
-const API_BASE = "http://localhost:3000/api";
+import api from "../services/api";
 
 const EbilletsCompagnie = () => {
   const [ebillets, setEbillets] = useState([]);
@@ -34,13 +34,10 @@ const EbilletsCompagnie = () => {
   const [selectedEbillet, setSelectedEbillet] = useState(null);
   const [showDetailModal, setShowDetailModal] = useState(false);
 
-  console.log("les ebillets ",ebillets)
-
   useEffect(() => {
     const fetchEbillets = async () => {
       try {
         const compagnieId = localStorage.getItem("compagnie_id");
-        const token = localStorage.getItem("token_compagnie");
 
         if (!compagnieId) {
           setError("Aucune compagnie connectée.");
@@ -48,14 +45,7 @@ const EbilletsCompagnie = () => {
           return;
         }
 
-        const response = await axios.get(
-          `http://localhost:3000/api/ebills/compagnie/${compagnieId}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const response = await api.get(`/ebills/compagnie/${compagnieId}`);
 
         let billets = response.data.ebillets || [];
 

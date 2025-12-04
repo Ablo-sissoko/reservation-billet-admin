@@ -21,8 +21,6 @@ import {
 } from "react-icons/fa";
 import api from "../services/api";
 
-const API_BASE = "http://localhost:3000/api";
-
 const PaiementsManagement = () => {
   const [paiements, setPaiements] = useState([]);
   const [compagnies, setCompagnies] = useState([]);

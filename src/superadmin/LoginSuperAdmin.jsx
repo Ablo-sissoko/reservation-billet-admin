@@ -22,7 +22,8 @@ export default function LoginSuperAdmin() {
     
     try {
       const res = await api.post(`/superadmin/auth/login`, form);
-      localStorage.setItem("token", res.data.token);
+      localStorage.setItem("token_superadmin", res.data.token);
+      localStorage.setItem("user_superadmin", JSON.stringify(res.data.user));
       setMessage("Connexion réussie ! ✅");
       
       setTimeout(() => {

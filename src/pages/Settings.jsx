@@ -25,7 +25,7 @@ import {
   FaTrash
 } from "react-icons/fa";
 
-const API_BASE = "http://localhost:3000/api";
+import api from "../services/api";
 
 const Settings = () => {
   const [activeTab, setActiveTab] = useState("infos");
@@ -75,12 +75,9 @@ const Settings = () => {
   });
 
   const compagnieId = localStorage.getItem("compagnie_id");
-  const token = localStorage.getItem("token_compagnie");
-
-  const axiosAuth = axios.create({
-    baseURL: API_BASE,
-    headers: { Authorization: `Bearer ${token}` },
-  });
+  
+  // ✅ Utiliser l'instance api configurée qui gère automatiquement les tokens
+  const axiosAuth = api;
 
   // Fonction utilitaire pour formater la note moyenne
   const formatNoteMoyenne = (moyenne) => {

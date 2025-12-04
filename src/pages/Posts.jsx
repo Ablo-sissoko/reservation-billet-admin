@@ -22,8 +22,18 @@ import {
   FaUsers
 } from "react-icons/fa";
 import EmojiPicker from 'emoji-picker-react';
+import api from "../services/api";
+import { API_BASE_URL } from "../services/api";
 
-const API_BASE = "http://localhost:3000/api";
+// ✅ Fonction utilitaire pour construire l'URL complète des images
+const getImageUrl = (imagePath) => {
+  if (!imagePath) return null;
+  // Si l'image commence déjà par http, retourner tel quel
+  if (imagePath.startsWith('http')) return imagePath;
+  // Sinon, construire l'URL complète depuis l'API base URL
+  const baseUrl = API_BASE_URL.replace('/api', '');
+  return `${baseUrl}${imagePath.startsWith('/') ? imagePath : '/' + imagePath}`;
+};
 
 const GestionPostes = () => {
   // États pour la création
@@ -51,12 +61,9 @@ const GestionPostes = () => {
   const actionsRef = useRef(null);
 
   const compagnieId = localStorage.getItem("compagnie_id");
-  const token = localStorage.getItem("token_compagnie");
-
-  const axiosAuth = axios.create({
-    baseURL: API_BASE,
-    headers: { Authorization: `Bearer ${token}` },
-  });
+  
+  // ✅ Utiliser l'instance api configurée qui gère automatiquement les tokens
+  const axiosAuth = api;
 
   // Charger les posts au montage
   useEffect(() => {
@@ -185,9 +192,9 @@ const GestionPostes = () => {
     setForm({
       titre: poste.titre,
       description: poste.description,
-      image: poste.image ? `${API_BASE.replace('/api', '')}/${poste.image}` : null
+      image: poste.image ? getImageUrl(poste.image) : null
     });
-    setPreview( poste.image ? `${API_BASE.replace('/api', '')}/${poste.image}` : null);
+    setPreview(poste.image ? getImageUrl(poste.image) : null);
   };
 
   const handleUpdate = async (e) => {
@@ -451,7 +458,7 @@ const GestionPostes = () => {
                           {poste.image && (
                             <div className="mb-4">
                               <img
-                                src={`${API_BASE.replace('/api', '')}${poste.image}`}
+                                src={getImageUrl(poste.image)}
                                 alt="Post"
                                 className="w-full h-48 object-cover rounded-lg shadow-md cursor-pointer"
                               />
@@ -698,7 +705,7 @@ const GestionPostes = () => {
                 {selectedPost.image && (
                   <div>
                     <img
-                      src={`${API_BASE.replace('/api', '')}${selectedPost.image}`}
+                      src={getImageUrl(selectedPost.image)}
                       alt="Publication"
                       className="w-full h-64 object-cover rounded-xl shadow-lg"
                     />
